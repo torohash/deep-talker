@@ -7,16 +7,18 @@
 
 ## 開発環境
 
-| 用途 | 採用するもの |
-| --- | --- |
-| 開発用ランタイムのバージョン管理 | mise |
-| 開発用ランタイム・パッケージ管理 | Bun |
-| フロントエンド | React + Vite + TypeScript |
-| 画面の構成 | SPA |
-| 公開先・API | Cloudflare Workers |
-| WebSocketの接続管理・通知 | Cloudflare Durable Objects |
-| アプリの状態の保存 | Turso |
-| テスト・リンター・フォーマッター | 選定中。調査結果は[開発ツールの検討](docs/tooling.md)を参照 |
+| 用途                             | 採用するもの                                                  |
+| -------------------------------- | ------------------------------------------------------------- |
+| 開発用ランタイムのバージョン管理 | mise                                                          |
+| 開発用ランタイム・パッケージ管理 | Bun                                                           |
+| フロントエンド                   | React + Vite + TypeScript                                     |
+| 画面の構成                       | SPA                                                           |
+| 公開先・API                      | Cloudflare Workers                                            |
+| WebSocketの接続管理・通知        | Cloudflare Durable Objects                                    |
+| アプリの状態の保存               | Turso                                                         |
+| リンター                         | Oxlint                                                        |
+| フォーマッター                   | Oxfmt                                                         |
+| テスト                           | Vitest 4。採用経緯は[開発ツールの検討](docs/tooling.md)を参照 |
 
 Bunのバージョンは`mise.toml`、依存パッケージのバージョンは`bun.lock`で管理する。
 `bunfig.toml`の`run.bun`により、パッケージのスクリプトもBunで実行する。
@@ -42,8 +44,30 @@ mise exec -- bun run build
 mise exec -- bun run preview
 ```
 
-`package.json`のスクリプトは、Vite標準の`dev`・`build`・`preview`を用意する。
 `build`ではTypeScriptの型チェックとViteのビルドを実行する。
+
+### テスト
+
+```sh
+mise exec -- bun run test
+```
+
+一度だけ実行する場合は`mise exec -- bun run test --run`を使う。
+`bun test`はBun自身のテストランナーを起動するため、Vitestには`bun run test`を使う。
+
+Vitestは既存の`vite.config.ts`を読み込む。テストは機能実装時に`.test.ts`や`.test.tsx`として追加する。
+現時点ではテストファイルは未追加で、`--run`でテストが見つからない場合はVitest標準の終了コード1になる。
+Workers向けのテスト設定は、Workersのコードを実装する段階で追加する。
+
+### リントと整形
+
+```sh
+mise exec -- bun run lint
+mise exec -- bun run fmt
+```
+
+整形結果を確認する場合は`mise exec -- bun run fmt --check`を実行する。
+ルールと整形スタイルは各ツールの標準設定を使う。
 
 ## 採用する構成
 
