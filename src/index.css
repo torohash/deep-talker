@@ -109,11 +109,6 @@ h2 {
   font-weight: 700;
   margin-bottom: 8px;
 }
-.lead {
-  color: #66756d;
-  margin-top: 10px;
-  line-height: 1.9;
-}
 .error {
   background: #fff0f0;
   color: #a3424c;

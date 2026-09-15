@@ -166,20 +166,7 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
       <main className="room-layout">
         {state && (
           <div className="room-heading">
-            <div>
-              {state.round.phase === "selecting" ? (
-                <h1>3つ選んで投票しよう。</h1>
-              ) : (
-                <>
-                  <h1>
-                    {state.round.phase === "talking"
-                      ? "今日の、話のきっかけ。"
-                      : "話してくれて、ありがとう。"}
-                  </h1>
-                  <p className="lead">話せることを、話せる範囲で。</p>
-                </>
-              )}
-            </div>
+            {state.round.phase === "selecting" && <h1>3つ選んで投票しよう。</h1>}
             {connected && (
               <button className="text-button leave" onClick={room.leave}>
                 部屋を退出する ↗
@@ -320,13 +307,9 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
               </>
             ) : (
               <section className="talk-panel">
-                <p className="eyebrow">
-                  {state.round.phase === "talking" ? "TODAY'S TOPIC" : "THANK YOU FOR SHARING"}
-                </p>
                 <span className="talk-stars">{"★".repeat(currentTopic!.level)}</span>
                 <h2>{currentTopic!.title}</h2>
                 <p className="talk-detail">{currentTopic!.detail}</p>
-                <div className="talk-rule">急がなくて大丈夫。ひとりずつ、聞いてみよう。</div>
                 <button
                   className="primary"
                   disabled={!connected || room.busy || !(state.canFinish || state.canStart)}

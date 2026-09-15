@@ -76,6 +76,7 @@
 }
 .leave {
   margin-top: 12px;
+  margin-left: auto;
 }
 .section-heading {
   display: flex;
@@ -405,10 +406,8 @@
   line-height: 2;
   color: #66756d;
 }
-.talk-rule {
-  font-size: 0.8rem;
-  color: #93a099;
-  margin: 38px 0 25px;
+.talk-panel > .primary {
+  margin-top: 34px;
 }
 .talk-panel > .small {
   margin-top: 18px;
