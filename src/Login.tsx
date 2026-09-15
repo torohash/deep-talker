@@ -9,9 +9,7 @@ export function Brand() {
       <span className="brand-mark" aria-hidden="true">
         d<span>t</span>
       </span>
-      <span>
-        deep talker<span className="brand-caption">A LITTLE DEEPER, TOGETHER.</span>
-      </span>
+      <span>deep talker</span>
     </a>
   );
 }

@@ -86,21 +86,18 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
       <main className="room-layout">
         <div className="room-heading">
           <div>
-            <p className="eyebrow">
-              TEAM ROOM {state && <span> / ROUND {String(state.round.id).padStart(2, "0")}</span>}
-            </p>
-            <h1>
-              {state?.round.phase === "talking"
-                ? "今日の、話のきっかけ。"
-                : state?.round.phase === "finished"
-                  ? "話してくれて、ありがとう。"
-                  : "今日は、なにを話そう。"}
-            </h1>
-            <p className="lead">
-              {state?.round.phase === "selecting"
-                ? "気になる題材を3つ選んで、仲間に渡そう。"
-                : "話せることを、話せる範囲で。"}
-            </p>
+            {state?.round.phase === "selecting" ? (
+              <h1>気になる題材を3つ選んで、会話。</h1>
+            ) : (
+              <>
+                <h1>
+                  {state?.round.phase === "talking"
+                    ? "今日の、話のきっかけ。"
+                    : "話してくれて、ありがとう。"}
+                </h1>
+                <p className="lead">話せることを、話せる範囲で。</p>
+              </>
+            )}
           </div>
           {connected && (
             <button className="text-button leave" onClick={room.leave}>
@@ -138,17 +135,12 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
             <Members state={state} />
             {state.round.phase === "selecting" ? (
               <>
-                <div className="ballot-heading">
-                  <div>
-                    <p className="eyebrow">PICK YOUR TOPICS</p>
-                    <h2>話してみたいこと</h2>
-                  </div>
-                </div>
                 {state.participants.length < MIN_PARTICIPANTS && (
                   <div className="notice">
                     もう一人の参加を待っています。2人以上で投票できます。
                   </div>
                 )}
+                <h2 className="ballot-title">トークアイデア</h2>
                 {state.topics.filter((topic) => !topic.used).length < VOTES_PER_PERSON && (
                   <div className="notice">
                     未使用の題材が3件に足りません。DBへの題材の追加をお願いします。
