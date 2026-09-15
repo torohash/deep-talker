@@ -28,10 +28,7 @@ function Members({ state }: { state: RoomState }) {
                 {member.name}
                 {member.id === state.viewer.id && <small>あなた</small>}
               </strong>
-              <span>
-                {member.role === "admin" ? "管理者 · " : ""}
-                {member.voted ? "投票済み" : "未投票"}
-              </span>
+              <span>{member.voted ? "投票済み" : "未投票"}</span>
             </div>
             <span className="member-state" aria-hidden="true">
               {member.voted ? "✓" : "·"}
@@ -205,7 +202,7 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
                     </strong>
                     <p>
                       {state.ownVotes.length > 0
-                        ? "全員が投票を終えたら、管理者が抽選を確定します。"
+                        ? "全員が投票を終えたら、誰でも抽選を確定できます。"
                         : "投票を送信すると、この回の選択は変更できません。"}
                     </p>
                   </div>
@@ -238,17 +235,13 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
                       人が投票済み。途中参加した人の投票も待ってから確定します。
                     </p>
                   </div>
-                  {state.viewer.role === "admin" ? (
-                    <button
-                      className="secondary"
-                      disabled={!connected || room.busy || !state.canDraw}
-                      onClick={() => room.act("draw")}
-                    >
-                      確定して抽選する ✦
-                    </button>
-                  ) : (
-                    <span className="small muted">管理者が抽選を確定します</span>
-                  )}
+                  <button
+                    className="secondary"
+                    disabled={!connected || room.busy || !state.canDraw}
+                    onClick={() => room.act("draw")}
+                  >
+                    確定して抽選する ✦
+                  </button>
                 </section>
               </>
             ) : (
@@ -260,25 +253,17 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
                 <h2>{currentTopic!.title}</h2>
                 <p className="talk-detail">{currentTopic!.detail}</p>
                 <div className="talk-rule">急がなくて大丈夫。ひとりずつ、聞いてみよう。</div>
-                {state.viewer.role === "admin" ? (
-                  <button
-                    className="primary"
-                    disabled={!connected || room.busy || !(state.canFinish || state.canStart)}
-                    onClick={() => room.act(state.round.phase === "talking" ? "finish" : "start")}
-                  >
-                    {room.busy
-                      ? "更新しています…"
-                      : state.round.phase === "talking"
-                        ? "トークを終了する"
-                        : "次の回を始める →"}
-                  </button>
-                ) : (
-                  <p className="muted">
-                    {state.round.phase === "talking"
-                      ? "終了操作は管理者が行います。"
-                      : "次の回の開始を待っています。"}
-                  </p>
-                )}
+                <button
+                  className="primary"
+                  disabled={!connected || room.busy || !(state.canFinish || state.canStart)}
+                  onClick={() => room.act(state.round.phase === "talking" ? "finish" : "start")}
+                >
+                  {room.busy
+                    ? "更新しています…"
+                    : state.round.phase === "talking"
+                      ? "トークを終了する"
+                      : "次の回を始める →"}
+                </button>
                 {state.round.phase === "finished" && (
                   <p className="small muted">この題材を使用済みにしました。</p>
                 )}

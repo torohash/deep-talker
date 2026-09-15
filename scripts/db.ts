@@ -24,12 +24,12 @@ if (command === "hash-password") {
       await client.executeMultiple(await readFile(process.argv[3], "utf8"));
       console.log("SQLを適用しました。");
     } else if (command === "seed-demo") {
-      for (const [index, name] of ["管理者", "ハル", "アオイ", "ユウ"].entries()) {
-        const id = index === 0 ? "admin" : `member-${index}`;
+      for (const [index, name] of ["ハル", "アオイ", "ユウ", "ナナ"].entries()) {
+        const id = `member-${index + 1}`;
         const password = newToken();
         await client.execute({
-          sql: "INSERT INTO users (id, name, role, password_hash) VALUES (?, ?, ?, ?)",
-          args: [id, name, index === 0 ? "admin" : "member", await hashPassword(password)],
+          sql: "INSERT INTO users (id, name, password_hash) VALUES (?, ?, ?)",
+          args: [id, name, await hashPassword(password)],
         });
         console.log(`${id}\t${name}\t${password}`);
       }

@@ -35,7 +35,7 @@ export class Sessions {
     if (token === null) throw new OperationError(401, "ログインしてください。");
     const hash = await tokenHash(token);
     const result = await this.store.client.execute({
-      sql: "SELECT u.id, u.name, u.role, s.expires_at FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ?",
+      sql: "SELECT u.id, u.name, s.expires_at FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ?",
       args: [hash],
     });
     const row = result.rows[0];

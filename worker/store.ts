@@ -1,12 +1,11 @@
 import { createClient } from "@libsql/client/http";
 import type { Row, Transaction } from "@libsql/client";
 import type { Env } from "./env";
-import type { Level, Phase, Role, RoomData, User } from "../shared/model";
+import type { Level, Phase, RoomData, User } from "../shared/model";
 
 export const userFromRow = (row: Row): User => ({
   id: String(row.id),
   name: String(row.name),
-  role: row.role as Role,
 });
 
 // 永続する状態を持つTursoへの読み書き。
@@ -41,7 +40,7 @@ export class Store {
         ? []
         : (
             await tx.execute({
-              sql: `SELECT id, name, role FROM users WHERE id IN (${ids.map(() => "?").join(",")}) ORDER BY name, id`,
+              sql: `SELECT id, name FROM users WHERE id IN (${ids.map(() => "?").join(",")}) ORDER BY name, id`,
               args: ids,
             })
           ).rows.map(userFromRow);

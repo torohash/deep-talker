@@ -13,7 +13,7 @@
 | Durable Object       | `TalkRoom`クラスを`ROOM`へバインド。SQLite方式。初回デプロイ時に`v1`マイグレーションで作成される |
 | 静的ファイル         | Viteの成果物を`ASSETS`へバインド。Cloudflare Viteプラグインが出力設定を作る                      |
 | TursoのDB            | libSQL互換のHTTP APIを提供するDB。接続用HTTPS URLと、そのDBを読み書きできるトークン              |
-| メンバー・題材       | 後述のSQLで直接登録。最低1名は`role = 'admin'`とする                                             |
+| メンバー・題材       | 後述のSQLで直接登録する                                                                          |
 | 公開URL              | `workers.dev`または独自ドメイン。HTTPSで利用する                                                 |
 
 DBクライアントは`@libsql/client/http`を使用している。TursoでDBを作成する際は、選んだエンジン・プランがこのクライアントとHTTPトランザクションに対応することを確認する。
@@ -62,15 +62,15 @@ mise exec -- bun run db hash-password
 以下の値を実際のID・表示名・生成したハッシュへ置き換える。
 
 ```sql
-INSERT INTO users (id, name, role, password_hash)
-VALUES ('your-id', '表示名', 'admin', '生成したハッシュ');
+INSERT INTO users (id, name, password_hash)
+VALUES ('your-id', '表示名', '生成したハッシュ');
 
-INSERT INTO users (id, name, role, password_hash)
-VALUES ('member-id', 'メンバーの表示名', 'member', '生成したハッシュ');
+INSERT INTO users (id, name, password_hash)
+VALUES ('member-id', 'メンバーの表示名', '生成したハッシュ');
 ```
 
 `id`がログインIDになる。アカウントの登録数に8人の制限はなく、同時に部屋へ参加できる人数を8人に制限する。
-管理者も参加人数に含まれる。管理者が部屋にいる状態で、抽選の確定・終了・次回開始を操作する。
+役割の違いはなく、部屋にいる参加者は全員、抽選の確定・終了・次回開始を操作できる。
 
 ### 題材
 
@@ -145,9 +145,9 @@ mise exec -- bun run wrangler deploy --config dist/deep_talker/wrangler.json
 
 - HTTPSでログインでき、CookieにSecure・HttpOnly・SameSite=Strictが付いている。
 - ページを開き直すとログイン状態を復元し、有効期限が28日後へ更新される。
-- 2人以上で投票できる。途中参加した未投票者がいると、管理者の確定が無効になる。
+- 2人以上で投票できる。途中参加した未投票者がいると、確定が無効になる。
 - 9人目を拒否し、同じユーザーの複数タブは1人として数える。
-- 全員の投票後も自動抽選せず、管理者の操作で一度だけ確定する。
+- 全員の投票後も自動抽選せず、参加者の操作で一度だけ確定する。
 - 全員に同じ結果が届き、終了後に使用済み表示になり、次回の投票から選択不可になる。
 - 再接続時に投票・抽選結果を復元する。
 - ログアウト後のセッションではAPIを操作できない。

@@ -57,7 +57,6 @@ export class RoomService {
           args: picks.flatMap((id) => [data.round.id, user.id, id]),
         });
       } else {
-        if (user.role !== "admin") throw new OperationError(403, "管理者だけが操作できます。");
         if (action === "draw") {
           if (!state.canDraw)
             throw new OperationError(409, "2人以上が参加し、全員の投票が完了すると抽選できます。");

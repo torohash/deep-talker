@@ -4,14 +4,12 @@ export const VOTES_PER_PERSON = 3;
 export const SESSION_SECONDS = 28 * 24 * 60 * 60;
 export const ROOM_NAME = "main";
 
-export type Role = "admin" | "member";
 export type Phase = "selecting" | "talking" | "finished";
 export type Level = 1 | 2 | 3;
 
 export interface User {
   id: string;
   name: string;
-  role: Role;
 }
 
 export interface Topic {
@@ -67,7 +65,6 @@ export function roomState(data: RoomData, viewer: User): RoomState {
     .filter((vote) => vote.userId === viewer.id)
     .map((vote) => vote.topicId);
   const voting = data.round.phase === "selecting" && participants.length >= MIN_PARTICIPANTS;
-  const admin = present && viewer.role === "admin";
   const readyForDraw = voting && participants.every((member) => member.voted);
   return {
     viewer,
@@ -81,9 +78,9 @@ export function roomState(data: RoomData, viewer: User): RoomState {
       ownVotes.length === 0 &&
       data.topics.filter((topic) => !topic.used).length >= VOTES_PER_PERSON,
     readyForDraw,
-    canDraw: admin && readyForDraw,
-    canFinish: admin && data.round.phase === "talking",
-    canStart: admin && data.round.phase === "finished",
+    canDraw: present && readyForDraw,
+    canFinish: present && data.round.phase === "talking",
+    canStart: present && data.round.phase === "finished",
   };
 }
 

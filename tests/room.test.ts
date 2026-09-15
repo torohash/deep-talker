@@ -84,8 +84,8 @@ beforeEach(async () => {
   for (let index = 0; index < 9; index++) {
     const id = index === 0 ? "admin" : `member-${index}`;
     await database.execute({
-      sql: "INSERT INTO users VALUES (?, ?, ?, ?)",
-      args: [id, `メンバー${index}`, index === 0 ? "admin" : "member", inject("passwordHash")],
+      sql: "INSERT INTO users (id, name, password_hash) VALUES (?, ?, ?)",
+      args: [id, `メンバー${index}`, inject("passwordHash")],
     });
     const token = crypto.randomUUID();
     cookies.set(id, `deep_talker_session=${token}`);
@@ -115,7 +115,7 @@ afterEach(async () => {
 });
 
 describe("参加・投票・抽選", () => {
-  test("2人目から投票でき、全員の投票後も管理者が確定するまで抽選しない", async () => {
+  test("2人目から投票でき、全員の投票後は参加者の誰でも一度だけ抽選を確定できる", async () => {
     const admin = await connect("admin");
     expect((await snapshot()).canVote).toBe(false);
     expect((await request("admin", "vote", { roundId: 1, topicIds: [1, 2, 3] })).status).toBe(409);
@@ -131,9 +131,9 @@ describe("参加・投票・抽選", () => {
     expect(ready.round.topicId).toBeNull();
     const own = await member.wait((state) => state.ownVotes.length === 3);
     expect(own.ownVotes).toEqual([1, 4, 5]);
-    expect(own.canDraw).toBe(false);
-    expect((await request("member-1", "draw", { roundId: 1 })).status).toBe(403);
-    expect((await request("admin", "draw", { roundId: 1 })).status).toBe(200);
+    expect(own.canDraw).toBe(true);
+    expect((await request("member-1", "draw", { roundId: 1 })).status).toBe(200);
+    expect((await request("admin", "draw", { roundId: 1 })).status).toBe(409);
     const talking = await admin.wait((state) => state.round.phase === "talking");
     const delivered = await member.wait((state) => state.round.phase === "talking");
     expect(delivered.round.topicId).toBe(talking.round.topicId);
@@ -212,16 +212,16 @@ describe("参加・投票・抽選", () => {
     ]);
     expect(responses.map((response) => response.status).sort()).toEqual([200, 409]);
     const talking = await snapshot();
-    expect((await request("member-1", "finish", { roundId: 1 })).status).toBe(403);
-    expect((await request("admin", "finish", { roundId: 1 })).status).toBe(200);
+    expect((await request("member-1", "finish", { roundId: 1 })).status).toBe(200);
+    expect((await request("admin", "finish", { roundId: 1 })).status).toBe(409);
     const finished = await admin.wait((state) => state.round.phase === "finished");
     expect(finished.topics.find((topic) => topic.id === talking.round.topicId)!.used).toBe(true);
-    expect((await request("admin", "start", { roundId: 1 })).status).toBe(200);
+    expect((await request("member-1", "start", { roundId: 1 })).status).toBe(200);
     const next = await admin.wait((state) => state.round.id === 2);
     expect(next.round).toEqual({ id: 2, phase: "selecting", topicId: null });
     expect(next.ownVotes).toEqual([]);
     expect(next.participants.every((member) => !member.voted)).toBe(true);
-    expect((await request("admin", "start", { roundId: 1 })).status).toBe(409);
+    expect((await request("member-1", "start", { roundId: 1 })).status).toBe(409);
   });
 
   test("再接続で確定済みの票が戻り、接続に付けた本人情報をDOから取り出せる", async () => {
@@ -261,8 +261,8 @@ describe("参加・投票・抽選", () => {
       round: { id: 1, phase: "selecting" as const, topicId: null },
       topics: [],
       members: [
-        { id: "a", name: "A", role: "admin" as const },
-        { id: "b", name: "B", role: "member" as const },
+        { id: "a", name: "A" },
+        { id: "b", name: "B" },
       ],
       votes: [
         { userId: "a", topicId: 1 },
