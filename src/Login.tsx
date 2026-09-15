@@ -35,33 +35,7 @@ export function Login({ onLogin }: { onLogin: (user: User) => void }) {
   }
   return (
     <div className="login-layout">
-      <section className="login-story">
-        <Brand />
-        <div>
-          <p className="eyebrow">LET'S GET TO KNOW EACH OTHER</p>
-          <h1>
-            いつもの仲間と、
-            <br />
-            もう少し深い話を。
-          </h1>
-          <p className="lead">
-            正解のない問いから、
-            <br />
-            まだ知らないお互いが見えてくる。
-          </p>
-          <div className="story-cards" aria-hidden="true">
-            <div>
-              最近、夢中になったことは？<span>★</span>
-            </div>
-            <div>
-              どんな瞬間に
-              <br />
-              自分らしさを感じる？<span>★★★</span>
-            </div>
-          </div>
-        </div>
-        <p className="muted small">話せることを、話せる範囲で。</p>
-      </section>
+      <Brand />
       <section className="login-card">
         <p className="eyebrow">WELCOME BACK</p>
         <h2>おかえりなさい</h2>

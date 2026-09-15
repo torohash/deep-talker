@@ -380,29 +380,15 @@
 }
 .login-layout {
   min-height: 100svh;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  max-width: 1320px;
-  margin: auto;
-  align-items: center;
-  padding: 45px 70px;
-  gap: 75px;
-}
-.login-story {
-  min-height: 630px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 40px;
-}
-.login-story h1 {
-  font-size: clamp(2rem, 4vw, 3rem);
-}
-.login-story .lead {
-  line-height: 2;
-  font-size: 1rem;
+  align-items: center;
+  justify-content: center;
+  gap: 38px;
+  padding: 45px 24px;
 }
 .login-card {
+  width: min(470px, 100%);
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 22px;
@@ -445,32 +431,6 @@
   text-align: center;
   margin-top: 25px;
 }
-.story-cards {
-  margin: 34px 0 20px 5px;
-  display: flex;
-  gap: 18px;
-}
-.story-cards div {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 21px;
-  width: 185px;
-  min-height: 140px;
-  font-size: 0.88rem;
-  box-shadow: 0 7px 15px #5f497b08;
-  transform: rotate(-5deg);
-}
-.story-cards div + div {
-  transform: rotate(7deg) translateY(10px);
-  background: #f0e9f8;
-}
-.story-cards span {
-  display: block;
-  color: #b698d1;
-  margin-top: 20px;
-  letter-spacing: 5px;
-}
 @media (max-width: 960px) {
   .topics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -481,10 +441,6 @@
   }
   .login-card {
     padding: 30px;
-  }
-  .story-cards div {
-    width: 150px;
-    padding: 16px;
   }
 }
 @media (max-width: 640px) {
@@ -551,29 +507,12 @@
     font-size: 0.65rem;
   }
   .login-layout {
-    display: flex;
-    flex-direction: column;
     padding: 28px 22px;
     gap: 30px;
-  }
-  .login-story {
-    min-height: auto;
-    gap: 35px;
-    width: 100%;
-  }
-  .login-story h1 {
-    font-size: 2rem;
-  }
-  .login-story > .small,
-  .story-cards {
-    display: none;
   }
   .login-card {
     width: 100%;
     padding: 28px 24px;
-  }
-  .login-story .lead {
-    font-size: 0.9rem;
   }
   .connection-notice {
     flex-direction: column;
