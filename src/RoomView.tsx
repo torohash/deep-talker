@@ -276,7 +276,6 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
       </main>
       <footer className="footer">
         <span>deep talker</span>
-        <span>会話の先に、新しいチームのかたち。</span>
       </footer>
     </>
   );

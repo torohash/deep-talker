@@ -257,13 +257,13 @@
   color: #fff;
 }
 .topic-card.used {
-  background: #ecebf0;
-  color: #a7a1ad;
-  opacity: 0.7;
+  background: #dedde4;
+  color: #8b8592;
+  opacity: 0.85;
 }
 .topic-card.used .topic-meta,
 .topic-card.used .topic-check {
-  color: #aaa3b0;
+  color: #98919f;
 }
 .vote-bar {
   position: sticky;
