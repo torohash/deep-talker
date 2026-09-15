@@ -93,11 +93,9 @@ function RoomSkeleton({ user, onLogout }: { user: User; onLogout: () => void }) 
                 <span className="skeleton skeleton-zone" />
               </h3>
               <div className="zone-topics">
-                {[0, 1, 2].map((card) => (
-                  <span key={card} className="topic-card skeleton-card">
-                    <span className="skeleton skeleton-stars" />
-                    <span className="skeleton skeleton-title-line" />
-                    <span className="skeleton skeleton-title-line short" />
+                {[0, 1, 2, 3, 4, 5].map((item) => (
+                  <span key={item} className="topic-item skeleton-item">
+                    <span className="skeleton skeleton-item-title" />
                   </span>
                 ))}
               </div>
@@ -225,29 +223,30 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
                   </div>
                 )}
                 <div className="topic-zones">
-                  {zones.map((zone) => (
-                    <section
-                      key={zone.level}
-                      className={`topic-zone level-${zone.level}`}
-                      aria-label={zone.title}
-                    >
-                      <h3 className="zone-heading">
-                        <span className="zone-stars" aria-hidden="true">
-                          {"★".repeat(zone.level)}
-                        </span>
-                        {zone.title}
-                      </h3>
-                      <div className="zone-topics">
-                        {state.topics
-                          .filter((topic) => topic.level === zone.level)
-                          .map((topic) => {
+                  {zones.map((zone) => {
+                    const zoneTopics = state.topics.filter((topic) => topic.level === zone.level);
+                    return (
+                      <section
+                        key={zone.level}
+                        className={`topic-zone level-${zone.level}`}
+                        aria-label={zone.title}
+                      >
+                        <h3 className="zone-heading">
+                          <span className="zone-stars" aria-hidden="true">
+                            {"★".repeat(zone.level)}
+                          </span>
+                          {zone.title}
+                          <span className="count">{zoneTopics.length}</span>
+                        </h3>
+                        <div className="zone-topics">
+                          {zoneTopics.map((topic) => {
                             const picked = choice.includes(topic.id);
                             return (
                               <button
                                 key={topic.id}
                                 type="button"
                                 aria-pressed={picked}
-                                className={`topic-card level-${topic.level} ${picked ? "picked" : ""} ${topic.used ? "used" : ""}`}
+                                className={`topic-item ${picked ? "picked" : ""} ${topic.used ? "used" : ""}`}
                                 disabled={
                                   !connected ||
                                   room.busy ||
@@ -257,21 +256,17 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
                                 }
                                 onClick={() => toggle(topic.id)}
                               >
-                                <div className="topic-meta">
-                                  <span aria-label={`レベル${topic.level}`}>
-                                    {"★".repeat(topic.level)}
-                                  </span>
-                                  <span className="topic-check">
-                                    {topic.used ? "済" : picked ? "✓" : "+"}
-                                  </span>
-                                </div>
-                                <h3>{topic.title}</h3>
+                                <span className="topic-title">{topic.title}</span>
+                                <span className="topic-check">
+                                  {topic.used ? "済" : picked ? "✓" : "+"}
+                                </span>
                               </button>
                             );
                           })}
-                      </div>
-                    </section>
-                  ))}
+                        </div>
+                      </section>
+                    );
+                  })}
                 </div>
                 {state.topics.length === 0 && (
                   <div className="empty">

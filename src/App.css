@@ -191,52 +191,45 @@
 .zone-topics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 8px 10px;
 }
-.topic-card {
+.topic-item {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   text-align: left;
-  min-height: 150px;
-  padding: 18px 19px 15px;
+  padding: 9px 13px;
   background: #fff;
   border: 1px solid #e3ebe5;
-  border-radius: 14px;
+  border-radius: 10px;
   color: #2c3a32;
+  font-size: 0.88rem;
+  line-height: 1.6;
   transition:
     border-color 0.15s,
-    transform 0.15s;
+    background 0.15s;
 }
-.topic-card:hover:enabled {
-  transform: translateY(-3px);
+.topic-item:hover:enabled {
   border-color: #8fbe9f;
+  background: #f7fbf8;
 }
-.topic-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.8rem;
-  letter-spacing: 3px;
-  color: #c9a227;
+.topic-title {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .topic-check {
-  width: 23px;
-  height: 23px;
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
   display: grid;
   place-items: center;
   border: 1px solid #e3ebe5;
   border-radius: 50%;
   color: #a8b5ac;
-  letter-spacing: 0;
+  font-size: 0.8rem;
 }
-.topic-card h3 {
-  font-size: 1.1rem;
-  font-weight: 650;
-  line-height: 1.75;
-  margin: 13px 0 16px;
-  overflow-wrap: anywhere;
-}
-.topic-card.picked {
+.topic-item.picked {
   border-color: #4f9169;
   background: #edf6ef;
 }
@@ -245,13 +238,12 @@
   border-color: var(--accent);
   color: #fff;
 }
-.topic-card.used {
-  background: #dde3de;
+.topic-item.used {
+  background: #dee4df;
   color: #7d887f;
-  opacity: 0.85;
+  opacity: 0.9;
 }
-.topic-card.used .topic-meta,
-.topic-card.used .topic-check {
+.topic-item.used .topic-check {
   color: #909a94;
 }
 /* 状態が届くまでの骨格。接続後の並びと同じ大きさで場所を取る。 */
@@ -315,18 +307,9 @@
   height: 1.73rem;
   border-radius: 9px;
 }
-.skeleton-stars {
-  width: 44px;
-  height: 0.8rem;
-}
-.skeleton-title-line {
+.skeleton-item-title {
   width: 100%;
-  height: 1.1rem;
-  margin-top: 13px;
-}
-.skeleton-title-line.short {
-  width: 62%;
-  margin-top: 8px;
+  height: 1.6em;
 }
 .skeleton-strong {
   width: 180px;
@@ -570,16 +553,7 @@
   }
   .zone-topics {
     grid-template-columns: 1fr;
-    gap: 11px;
-  }
-  .topic-card {
-    min-height: 132px;
-  }
-  .skeleton-card {
-    min-height: 132px;
-  }
-  .topic-card h3 {
-    margin-top: 12px;
+    gap: 8px;
   }
   .vote-bar {
     padding: 16px;

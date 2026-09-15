@@ -39,7 +39,7 @@ input {
   outline: 3px solid #7cb193;
   outline-offset: 4px;
 }
-button:disabled:not(.topic-card) {
+button:disabled:not(.topic-item) {
   opacity: 0.45;
 }
 a {
