@@ -183,35 +183,26 @@
 }
 .topic-zones {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  align-items: start;
+  gap: 36px;
+  margin-bottom: 10px;
 }
 .topic-zone {
-  border: 1px solid #e8e3ee;
-  border-radius: 18px;
-  padding: 18px 18px 20px;
-  background: #f6f5f8;
-}
-.topic-zone.level-1 {
-  background: #f3f7f0;
-  border-color: #e2ebdb;
-}
-.topic-zone.level-2 {
-  background: #faf7ef;
-  border-color: #ece2d1;
-}
-.topic-zone.level-3 {
-  background: #f7f2fd;
-  border-color: #e6dbf5;
+  display: grid;
+  gap: 16px;
 }
 .zone-heading {
-  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.02rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e4dfeb;
 }
 .zone-stars {
-  display: block;
-  font-size: 0.78rem;
-  letter-spacing: 4px;
+  font-size: 0.82rem;
+  letter-spacing: 3px;
   color: #a3a896;
 }
 .topic-zone.level-2 .zone-stars {
@@ -220,18 +211,10 @@
 .topic-zone.level-3 .zone-stars {
   color: #aa8ac1;
 }
-.zone-heading h3 {
-  font-size: 1rem;
-  margin: 7px 0 3px;
-}
-.zone-heading p {
-  font-size: 0.72rem;
-  color: #7d728b;
-}
 .zone-topics {
   display: grid;
-  grid-auto-rows: 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
 }
 .topic-card {
   display: flex;
@@ -473,7 +456,7 @@
 }
 @media (max-width: 960px) {
   .topic-zones {
-    grid-template-columns: 1fr;
+    gap: 28px;
   }
   .zone-topics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -522,7 +505,11 @@
     margin-bottom: 30px;
   }
   .topic-zone {
-    padding: 15px 14px 17px;
+    gap: 13px;
+  }
+  .zone-heading {
+    font-size: 0.95rem;
+    padding-bottom: 10px;
   }
   .zone-topics {
     grid-template-columns: 1fr;

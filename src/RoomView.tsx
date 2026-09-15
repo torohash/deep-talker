@@ -6,9 +6,9 @@ import { Brand } from "./Login";
 import { useRoom } from "./useRoom";
 
 const zones = [
-  { level: 1, title: "気軽に話せる", note: "思いついたことを、そのまま" },
-  { level: 2, title: "少し考えて話す", note: "少し立ち止まって、自分の言葉で" },
-  { level: 3, title: "じっくり話す", note: "時間をかけて、ゆっくりと" },
+  { level: 1, title: "気軽に話せる" },
+  { level: 2, title: "少し考えて話す" },
+  { level: 3, title: "じっくり話す" },
 ] as const;
 
 function Members({ state }: { state: RoomState }) {
@@ -161,13 +161,12 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
                       className={`topic-zone level-${zone.level}`}
                       aria-label={zone.title}
                     >
-                      <div className="zone-heading">
+                      <h3 className="zone-heading">
                         <span className="zone-stars" aria-hidden="true">
                           {"★".repeat(zone.level)}
                         </span>
-                        <h3>{zone.title}</h3>
-                        <p>{zone.note}</p>
-                      </div>
+                        {zone.title}
+                      </h3>
                       <div className="zone-topics">
                         {state.topics
                           .filter((topic) => topic.level === zone.level)
