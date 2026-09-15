@@ -67,6 +67,14 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
       current.includes(id) ? current.filter((value) => value !== id) : [...current, id],
     );
   }
+  if (!state && room.status === "connecting")
+    return (
+      <div className="boot">
+        <Brand />
+        <span className="spinner" />
+        <p>ログインしています…</p>
+      </div>
+    );
   return (
     <>
       <header className="topbar">
@@ -83,27 +91,29 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
         </div>
       </header>
       <main className="room-layout">
-        <div className="room-heading">
-          <div>
-            {state?.round.phase === "selecting" ? (
-              <h1>3つ選んで投票しよう。</h1>
-            ) : (
-              <>
-                <h1>
-                  {state?.round.phase === "talking"
-                    ? "今日の、話のきっかけ。"
-                    : "話してくれて、ありがとう。"}
-                </h1>
-                <p className="lead">話せることを、話せる範囲で。</p>
-              </>
+        {state && (
+          <div className="room-heading">
+            <div>
+              {state.round.phase === "selecting" ? (
+                <h1>3つ選んで投票しよう。</h1>
+              ) : (
+                <>
+                  <h1>
+                    {state.round.phase === "talking"
+                      ? "今日の、話のきっかけ。"
+                      : "話してくれて、ありがとう。"}
+                  </h1>
+                  <p className="lead">話せることを、話せる範囲で。</p>
+                </>
+              )}
+            </div>
+            {connected && (
+              <button className="text-button leave" onClick={room.leave}>
+                部屋を退出する ↗
+              </button>
             )}
           </div>
-          {connected && (
-            <button className="text-button leave" onClick={room.leave}>
-              部屋を退出する ↗
-            </button>
-          )}
-        </div>
+        )}
         {(room.error || logoutError) && (
           <div role="alert" className="error">
             {room.error}
