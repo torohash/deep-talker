@@ -185,13 +185,7 @@
 .zone-stars {
   font-size: 0.82rem;
   letter-spacing: 3px;
-  color: #7fa98a;
-}
-.topic-zone.level-2 .zone-stars {
-  color: #b39a6d;
-}
-.topic-zone.level-3 .zone-stars {
-  color: #8593b8;
+  color: #c9a227;
 }
 .zone-topics {
   display: grid;
@@ -222,13 +216,7 @@
   align-items: center;
   font-size: 0.8rem;
   letter-spacing: 3px;
-  color: #7fa98a;
-}
-.level-2 .topic-meta {
-  color: #b39a6d;
-}
-.level-3 .topic-meta {
-  color: #8593b8;
+  color: #c9a227;
 }
 .topic-check {
   width: 23px;
@@ -310,7 +298,7 @@
   margin-bottom: 45px;
 }
 .talk-stars {
-  color: #6f9f83;
+  color: #c9a227;
   font-size: 1.1rem;
   letter-spacing: 8px;
   display: block;
