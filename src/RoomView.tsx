@@ -206,11 +206,9 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
                         ? "投票を受け付けました"
                         : `${selected.length} / ${VOTES_PER_PERSON} 選択中`}
                     </strong>
-                    <p>
-                      {state.ownVotes.length > 0
-                        ? "全員が投票を終えたら、誰でも抽選を確定できます。"
-                        : "投票を送信すると、この回の選択は変更できません。"}
-                    </p>
+                    {state.ownVotes.length > 0 && (
+                      <p>全員が投票を終えたら、誰でも抽選を確定できます。</p>
+                    )}
                   </div>
                   <button
                     className="primary"
