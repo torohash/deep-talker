@@ -43,6 +43,86 @@ function Members({ state }: { state: RoomState }) {
   );
 }
 
+// 状態が届くまでの骨格。接続後に中身が入れ替わっても位置がずれにくいように、
+// 部屋と同じ並びと大きさで場所を取っておく。
+function RoomSkeleton({ user, onLogout }: { user: User; onLogout: () => void }) {
+  return (
+    <>
+      <header className="topbar">
+        <Brand />
+        <div className="topbar-actions">
+          <span className="connection">
+            <i />
+            接続しています
+          </span>
+          <span className="account-name">{user.name}</span>
+          <button className="text-button" onClick={onLogout}>
+            ログアウト
+          </button>
+        </div>
+      </header>
+      <main className="room-layout" aria-busy="true">
+        <div className="room-heading">
+          <span className="skeleton skeleton-title" />
+        </div>
+        <section className="members-panel" aria-label="メンバーを読み込み中">
+          <div className="section-heading">
+            <span className="skeleton skeleton-heading" />
+            <span className="loading-note">
+              <span className="spinner" />
+              ログインしています…
+            </span>
+          </div>
+          <ul className="members">
+            {[0, 1, 2].map((index) => (
+              <li key={index} className="skeleton-member">
+                <span className="skeleton skeleton-avatar" />
+                <span className="member-name">
+                  <span className="skeleton skeleton-name" />
+                  <span className="skeleton skeleton-state" />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+        <span className="skeleton skeleton-ballot" />
+        <div className="topic-zones">
+          {[0, 1, 2].map((zone) => (
+            <section key={zone} className="topic-zone">
+              <h3 className="zone-heading">
+                <span className="skeleton skeleton-zone" />
+              </h3>
+              <div className="zone-topics">
+                {[0, 1, 2].map((card) => (
+                  <span key={card} className="topic-card skeleton-card">
+                    <span className="skeleton skeleton-stars" />
+                    <span className="skeleton skeleton-title-line" />
+                    <span className="skeleton skeleton-title-line short" />
+                  </span>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+        <section className="vote-bar">
+          <span className="skeleton skeleton-strong" />
+          <span className="skeleton skeleton-button" />
+        </section>
+        <section className="draw-panel">
+          <div>
+            <span className="skeleton skeleton-h2" />
+            <span className="skeleton skeleton-muted" />
+          </div>
+          <span className="skeleton skeleton-button" />
+        </section>
+      </main>
+      <footer className="footer">
+        <span>deep talker</span>
+      </footer>
+    </>
+  );
+}
+
 export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () => void }) {
   const room = useRoom(user, onSignedOut);
   const [selected, setSelected] = useState<number[]>([]);
@@ -67,14 +147,9 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
       current.includes(id) ? current.filter((value) => value !== id) : [...current, id],
     );
   }
-  if (!state && room.status === "connecting")
-    return (
-      <div className="boot">
-        <Brand />
-        <span className="spinner" />
-        <p>ログインしています…</p>
-      </div>
-    );
+  // 接続が終わるまでは骨格を出す。接続前の状態だけが先に届いて、
+  // メンバーが空のまま一度描かれるのを避ける。
+  if (room.status === "connecting") return <RoomSkeleton user={user} onLogout={logout} />;
   return (
     <>
       <header className="topbar">
@@ -82,7 +157,7 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
         <div className="topbar-actions">
           <span className={`connection ${connected ? "online" : ""}`}>
             <i />
-            {connected ? "接続中" : room.status === "connecting" ? "接続しています" : "未接続"}
+            {connected ? "接続中" : "未接続"}
           </span>
           <span className="account-name">{user.name}</span>
           <button className="text-button" onClick={logout}>
@@ -124,19 +199,13 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
           <div className="notice connection-notice">
             <div>
               <strong>
-                {room.status === "connecting"
-                  ? "部屋につないでいます…"
-                  : room.status === "left"
-                    ? "部屋を退出しました"
-                    : "接続が切れています"}
+                {room.status === "left" ? "部屋を退出しました" : "接続が切れています"}
               </strong>
               <p>入室すると参加者に加わります。投票内容は再接続後も保持されます。</p>
             </div>
-            {room.status !== "connecting" && (
-              <button className="secondary" onClick={room.reconnect}>
-                部屋に接続する
-              </button>
-            )}
+            <button className="secondary" onClick={room.reconnect}>
+              部屋に接続する
+            </button>
           </div>
         )}
         {state && (
