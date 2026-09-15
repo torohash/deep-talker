@@ -307,6 +307,9 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
               </>
             ) : (
               <section className="talk-panel">
+                <p className="eyebrow">
+                  {state.round.phase === "talking" ? "TODAY'S TOPIC" : "THANK YOU FOR SHARING"}
+                </p>
                 <span className="talk-stars">{"★".repeat(currentTopic!.level)}</span>
                 <h2>{currentTopic!.title}</h2>
                 <p className="talk-detail">{currentTopic!.detail}</p>
