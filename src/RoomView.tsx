@@ -5,7 +5,11 @@ import { api } from "./api";
 import { Brand } from "./Login";
 import { useRoom } from "./useRoom";
 
-const levelNames = { 1: "気軽に話そう", 2: "考えをシェア", 3: "少し深く話そう" };
+const zones = [
+  { level: 1, title: "気軽に話せる", note: "思いついたことを、そのまま" },
+  { level: 2, title: "少し考えて話す", note: "少し立ち止まって、自分の言葉で" },
+  { level: 3, title: "じっくり話す", note: "時間をかけて、ゆっくりと" },
+] as const;
 
 function Members({ state }: { state: RoomState }) {
   return (
@@ -139,11 +143,6 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
                     <p className="eyebrow">PICK YOUR TOPICS</p>
                     <h2>話してみたいこと</h2>
                   </div>
-                  <div className="legend">
-                    <span>★ 気軽</span>
-                    <span>★★ 考え</span>
-                    <span>★★★ 深め</span>
-                  </div>
                 </div>
                 {state.participants.length < MIN_PARTICIPANTS && (
                   <div className="notice">
@@ -155,38 +154,60 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
                     未使用の題材が3件に足りません。DBへの題材の追加をお願いします。
                   </div>
                 )}
-                <div className="topics">
-                  {state.topics.map((topic) => {
-                    const picked = choice.includes(topic.id);
-                    return (
-                      <button
-                        key={topic.id}
-                        type="button"
-                        aria-pressed={picked}
-                        className={`topic-card level-${topic.level} ${picked ? "picked" : ""} ${topic.used ? "used" : ""}`}
-                        disabled={
-                          !connected ||
-                          room.busy ||
-                          !state.canVote ||
-                          topic.used ||
-                          (!picked && choice.length >= VOTES_PER_PERSON)
-                        }
-                        onClick={() => toggle(topic.id)}
-                      >
-                        <div className="topic-meta">
-                          <span aria-label={`レベル${topic.level}`}>{"★".repeat(topic.level)}</span>
-                          <span className="topic-check">
-                            {topic.used ? "済" : picked ? "✓" : "+"}
-                          </span>
-                        </div>
-                        <h3>{topic.title}</h3>
-                        <div className="topic-bottom">
-                          <span>{levelNames[topic.level]}</span>
-                          {topic.used && <span>使用済み</span>}
-                        </div>
-                      </button>
-                    );
-                  })}
+                <div className="topic-zones">
+                  {zones.map((zone) => (
+                    <section
+                      key={zone.level}
+                      className={`topic-zone level-${zone.level}`}
+                      aria-label={zone.title}
+                    >
+                      <div className="zone-heading">
+                        <span className="zone-stars" aria-hidden="true">
+                          {"★".repeat(zone.level)}
+                        </span>
+                        <h3>{zone.title}</h3>
+                        <p>{zone.note}</p>
+                      </div>
+                      <div className="zone-topics">
+                        {state.topics
+                          .filter((topic) => topic.level === zone.level)
+                          .map((topic) => {
+                            const picked = choice.includes(topic.id);
+                            return (
+                              <button
+                                key={topic.id}
+                                type="button"
+                                aria-pressed={picked}
+                                className={`topic-card level-${topic.level} ${picked ? "picked" : ""} ${topic.used ? "used" : ""}`}
+                                disabled={
+                                  !connected ||
+                                  room.busy ||
+                                  !state.canVote ||
+                                  topic.used ||
+                                  (!picked && choice.length >= VOTES_PER_PERSON)
+                                }
+                                onClick={() => toggle(topic.id)}
+                              >
+                                <div className="topic-meta">
+                                  <span aria-label={`レベル${topic.level}`}>
+                                    {"★".repeat(topic.level)}
+                                  </span>
+                                  <span className="topic-check">
+                                    {topic.used ? "済" : picked ? "✓" : "+"}
+                                  </span>
+                                </div>
+                                <h3>{topic.title}</h3>
+                                {topic.used && (
+                                  <div className="topic-bottom">
+                                    <span>使用済み</span>
+                                  </div>
+                                )}
+                              </button>
+                            );
+                          })}
+                      </div>
+                    </section>
+                  ))}
                 </div>
                 {state.topics.length === 0 && (
                   <div className="empty">

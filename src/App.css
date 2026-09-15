@@ -181,24 +181,64 @@
 .ballot-heading h2 {
   font-size: 1.4rem;
 }
-.legend {
-  display: flex;
-  gap: 14px;
-  font-size: 0.75rem;
-  color: #7d6c91;
-  flex-wrap: wrap;
-}
-.topics {
+.topic-zones {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
+  align-items: start;
+}
+.topic-zone {
+  border: 1px solid #e8e3ee;
+  border-radius: 18px;
+  padding: 18px 18px 20px;
+  background: #f6f5f8;
+}
+.topic-zone.level-1 {
+  background: #f3f7f0;
+  border-color: #e2ebdb;
+}
+.topic-zone.level-2 {
+  background: #faf7ef;
+  border-color: #ece2d1;
+}
+.topic-zone.level-3 {
+  background: #f7f2fd;
+  border-color: #e6dbf5;
+}
+.zone-heading {
+  margin-bottom: 15px;
+}
+.zone-stars {
+  display: block;
+  font-size: 0.78rem;
+  letter-spacing: 4px;
+  color: #a3a896;
+}
+.topic-zone.level-2 .zone-stars {
+  color: #b4a077;
+}
+.topic-zone.level-3 .zone-stars {
+  color: #aa8ac1;
+}
+.zone-heading h3 {
+  font-size: 1rem;
+  margin: 7px 0 3px;
+}
+.zone-heading p {
+  font-size: 0.72rem;
+  color: #7d728b;
+}
+.zone-topics {
+  display: grid;
+  grid-auto-rows: 1fr;
+  gap: 12px;
 }
 .topic-card {
   display: flex;
   flex-direction: column;
   text-align: left;
-  min-height: 188px;
-  padding: 21px 24px 17px;
+  min-height: 150px;
+  padding: 18px 19px 15px;
   background: #fff;
   border: 1px solid #e8e3ee;
   border-radius: 14px;
@@ -242,7 +282,7 @@
   font-size: 1.1rem;
   font-weight: 650;
   line-height: 1.75;
-  margin: 15px 0 20px;
+  margin: 13px 0 16px;
   overflow-wrap: anywhere;
 }
 .topic-bottom {
@@ -432,7 +472,10 @@
   margin-top: 25px;
 }
 @media (max-width: 960px) {
-  .topics {
+  .topic-zones {
+    grid-template-columns: 1fr;
+  }
+  .zone-topics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .login-layout {
@@ -478,12 +521,15 @@
     padding: 18px;
     margin-bottom: 30px;
   }
-  .topics {
+  .topic-zone {
+    padding: 15px 14px 17px;
+  }
+  .zone-topics {
     grid-template-columns: 1fr;
-    gap: 13px;
+    gap: 11px;
   }
   .topic-card {
-    min-height: 158px;
+    min-height: 132px;
   }
   .topic-card h3 {
     margin-top: 12px;
