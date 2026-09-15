@@ -51,7 +51,7 @@ DBは`http://127.0.0.1:8080`で待ち受け、`.data/libsql`に保存する。�
 mise exec -- bun run db migrate
 ```
 
-ローカルで試す場合は、デモ用の4アカウントと12件の題材を明示的に投入できる。
+ローカルで試す場合は、デモ用の4アカウントと、題材の投入書式のサンプル1件を明示的に投入できる。
 
 ```sh
 mise exec -- bun run db seed-demo
@@ -170,7 +170,7 @@ mise exec -- bun run build
 | `shared/model.ts`       | 人数・票数などの共通ルール、状態の型と表示用の計算 |
 | `worker/`               | Worker、DO、認証、Tursoへの読み書き                |
 | `db/schema.sql`         | ユーザー・セッション・題材・回・票のテーブル定義   |
-| `db/topics.example.sql` | 任意で投入するサンプル題材                         |
+| `db/topics.example.sql` | 題材の投入書式のサンプル（実際の題材はDBへ登録する） |
 | `scripts/db.ts`         | SQL適用、パスワードハッシュ生成、デモ投入          |
 | `tests/`                | WorkersとローカルDBを使うテスト                    |
 | `wrangler.jsonc`        | Cloudflareのバインディング・マイグレーション設定   |
