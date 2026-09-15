@@ -75,7 +75,6 @@ h2 {
 .primary {
   background: var(--accent);
   color: white;
-  box-shadow: 0 4px 12px #7553bc1c;
 }
 .primary:hover:enabled {
   background: #6441a8;

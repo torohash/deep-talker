@@ -21,7 +21,6 @@ function Members({ state }: { state: RoomState }) {
             {state.participants.length} / {MAX_PARTICIPANTS}
           </span>
         </h2>
-        <span className="small muted">途中参加もできます</span>
       </div>
       <ul className="members">
         {state.participants.map((member) => (
@@ -87,7 +86,7 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
         <div className="room-heading">
           <div>
             {state?.round.phase === "selecting" ? (
-              <h1>気になる題材を3つ選んで、会話。</h1>
+              <h1>3つ選んで投票しよう。</h1>
             ) : (
               <>
                 <h1>
@@ -188,11 +187,6 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
                                   </span>
                                 </div>
                                 <h3>{topic.title}</h3>
-                                {topic.used && (
-                                  <div className="topic-bottom">
-                                    <span>使用済み</span>
-                                  </div>
-                                )}
                               </button>
                             );
                           })}
@@ -237,14 +231,10 @@ export function RoomView({ user, onSignedOut }: { user: User; onSignedOut: () =>
                 </section>
                 <section className="draw-panel">
                   <div>
-                    <p className="eyebrow">READY TO TALK?</p>
-                    <h2>
-                      {state.readyForDraw ? "全員の投票が揃いました" : "みんなの投票を待っています"}
-                    </h2>
+                    <h2>{state.readyForDraw ? "全員の投票が揃いました" : "投票待機中"}</h2>
                     <p className="muted">
                       {state.participants.filter((member) => member.voted).length} /{" "}
-                      {state.participants.length}{" "}
-                      人が投票済み。途中参加した人の投票も待ってから確定します。
+                      {state.participants.length} 人が投票済み。
                     </p>
                   </div>
                   <button

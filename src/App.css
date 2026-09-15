@@ -207,17 +207,14 @@
   background: #fff;
   border: 1px solid #e8e3ee;
   border-radius: 14px;
-  box-shadow: 0 3px 8px #342c4310;
   color: #433a50;
   transition:
     border-color 0.15s,
-    transform 0.15s,
-    box-shadow 0.15s;
+    transform 0.15s;
 }
 .topic-card:hover:enabled {
   transform: translateY(-3px);
   border-color: #bba1d9;
-  box-shadow: 0 8px 16px #60478514;
 }
 .topic-meta {
   display: flex;
@@ -250,18 +247,9 @@
   margin: 13px 0 16px;
   overflow-wrap: anywhere;
 }
-.topic-bottom {
-  margin-top: auto;
-  display: flex;
-  justify-content: space-between;
-  gap: 6px;
-  font-size: 0.75rem;
-  color: #7d728b;
-}
 .topic-card.picked {
   border-color: #a580ca;
   background: #f7f2fd;
-  box-shadow: 0 0 0 1px #a580ca;
 }
 .picked .topic-check {
   background: var(--accent);
@@ -271,7 +259,6 @@
 .topic-card.used {
   background: #ecebf0;
   color: #a7a1ad;
-  box-shadow: none;
   opacity: 0.7;
 }
 .topic-card.used .topic-meta,
@@ -292,7 +279,6 @@
   border-radius: 15px;
   background: #ffffffed;
   backdrop-filter: blur(14px);
-  box-shadow: 0 10px 30px #3f285c12;
 }
 .vote-bar strong {
   font-size: 0.95rem;
@@ -398,7 +384,6 @@
   border: 1px solid var(--line);
   border-radius: 22px;
   padding: 45px;
-  box-shadow: 0 20px 60px #4c38690b;
 }
 .login-card h2 {
   font-size: 1.7rem;
