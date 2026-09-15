@@ -2,16 +2,16 @@
 
 :root {
   font-family: Inter, "Hiragino Kaku Gothic ProN", "Noto Sans JP", system-ui, sans-serif;
-  color: #282435;
-  background: #f6f5f9;
+  color: #223029;
+  background: #f4f7f4;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   font-size: 15px;
   line-height: 1.7;
-  --accent: #7553bc;
-  --muted: #756e83;
-  --line: #e8e4ef;
+  --accent: #2f7a55;
+  --muted: #6d7a72;
+  --line: #e2eae4;
 }
 * {
   box-sizing: border-box;
@@ -36,7 +36,7 @@ input {
   -webkit-tap-highlight-color: transparent;
 }
 :focus-visible {
-  outline: 3px solid #ae8fe1;
+  outline: 3px solid #7cb193;
   outline-offset: 4px;
 }
 button:disabled:not(.topic-card) {
@@ -77,21 +77,21 @@ h2 {
   color: white;
 }
 .primary:hover:enabled {
-  background: #6441a8;
+  background: #276547;
   transform: translateY(-1px);
 }
 .secondary {
-  background: #eee8f7;
-  color: #6543a4;
+  background: #e5f0e8;
+  color: #2f6a4a;
 }
 .secondary:hover:enabled {
-  background: #e3d8f3;
+  background: #d5e7db;
 }
 .text-button {
   background: transparent;
   border: 0;
   padding: 7px 0;
-  color: #777081;
+  color: #6f7c74;
   font-size: 0.85rem;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -103,14 +103,14 @@ h2 {
   font-size: 0.8rem;
 }
 .eyebrow {
-  color: #93889f;
+  color: #8b978f;
   letter-spacing: 0.16em;
   font-size: 0.7rem;
   font-weight: 700;
   margin-bottom: 8px;
 }
 .lead {
-  color: #776d84;
+  color: #66756d;
   margin-top: 10px;
   line-height: 1.9;
 }
@@ -127,8 +127,8 @@ h2 {
 }
 .notice {
   padding: 16px 22px;
-  background: #eee9f6;
-  color: #6d588b;
+  background: #e8f2ec;
+  color: #3f6b53;
   border-radius: 12px;
   margin-bottom: 22px;
   font-size: 0.9rem;
@@ -152,7 +152,7 @@ h2 {
 .spinner {
   width: 26px;
   height: 26px;
-  border: 3px solid #e5dced;
+  border: 3px solid #dcebe1;
   border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;

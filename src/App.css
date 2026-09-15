@@ -13,7 +13,7 @@
   height: 38px;
   border-radius: 13px 13px 13px 3px;
   color: white;
-  background: #8568b4;
+  background: #2f7a55;
   display: grid;
   place-content: center;
   position: relative;
@@ -29,7 +29,7 @@
 .topbar {
   border-bottom: 1px solid var(--line);
   padding: 21px max(28px, calc((100vw - 1160px) / 2));
-  background: #fdfcfe;
+  background: #fbfdfb;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -43,7 +43,7 @@
 }
 .connection {
   font-size: 0.75rem;
-  color: #97909e;
+  color: #8b968f;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -51,11 +51,11 @@
 .connection i {
   width: 6px;
   height: 6px;
-  background: #b5aebb;
+  background: #a9b8ae;
   border-radius: 50%;
 }
 .connection.online i {
-  background: #83a98d;
+  background: #4c9568;
 }
 .account-name {
   max-width: 160px;
@@ -91,11 +91,11 @@
 .count {
   font-weight: 500;
   margin-left: 8px;
-  color: #a699b4;
+  color: #93a199;
   font-size: 0.78rem;
 }
 .members-panel {
-  background: #fdfcfe;
+  background: #fbfdfb;
   padding: 22px 26px;
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -116,15 +116,15 @@
   min-width: 0;
   padding: 9px 10px;
   border-radius: 10px;
-  background: #f7f5fa;
+  background: #f2f7f3;
 }
 .avatar {
   display: grid;
   flex: 0 0 34px;
   height: 34px;
   place-items: center;
-  color: #8c70ad;
-  background: #ece5f3;
+  color: #3d7a58;
+  background: #e2efe6;
   border-radius: 50%;
   font-size: 0.8rem;
 }
@@ -141,23 +141,23 @@
 .member-name small {
   margin-left: 6px;
   font-size: 0.6rem;
-  color: #9b8eaa;
+  color: #8d9a92;
   font-weight: 400;
 }
 .member-name > span {
   display: block;
   font-size: 0.74rem;
-  color: #81748e;
+  color: #75837a;
 }
 .member-state {
-  color: #b7a9c4;
+  color: #a9b7ad;
   width: 18px;
 }
 .voted .member-state {
-  color: #77977b;
+  color: #4f9568;
 }
 .voted .member-name > span {
-  color: #55775b;
+  color: #3f7350;
 }
 .ballot-title {
   font-size: 1.4rem;
@@ -180,18 +180,18 @@
   font-weight: 650;
   letter-spacing: -0.02em;
   padding-bottom: 12px;
-  border-bottom: 1px solid #e4dfeb;
+  border-bottom: 1px solid #e0e9e2;
 }
 .zone-stars {
   font-size: 0.82rem;
   letter-spacing: 3px;
-  color: #a3a896;
+  color: #7fa98a;
 }
 .topic-zone.level-2 .zone-stars {
-  color: #b4a077;
+  color: #b39a6d;
 }
 .topic-zone.level-3 .zone-stars {
-  color: #aa8ac1;
+  color: #8593b8;
 }
 .zone-topics {
   display: grid;
@@ -205,16 +205,16 @@
   min-height: 150px;
   padding: 18px 19px 15px;
   background: #fff;
-  border: 1px solid #e8e3ee;
+  border: 1px solid #e3ebe5;
   border-radius: 14px;
-  color: #433a50;
+  color: #2c3a32;
   transition:
     border-color 0.15s,
     transform 0.15s;
 }
 .topic-card:hover:enabled {
   transform: translateY(-3px);
-  border-color: #bba1d9;
+  border-color: #8fbe9f;
 }
 .topic-meta {
   display: flex;
@@ -222,22 +222,22 @@
   align-items: center;
   font-size: 0.8rem;
   letter-spacing: 3px;
-  color: #a3a896;
+  color: #7fa98a;
 }
 .level-2 .topic-meta {
-  color: #b4a077;
+  color: #b39a6d;
 }
 .level-3 .topic-meta {
-  color: #aa8ac1;
+  color: #8593b8;
 }
 .topic-check {
   width: 23px;
   height: 23px;
   display: grid;
   place-items: center;
-  border: 1px solid #e9e4ef;
+  border: 1px solid #e3ebe5;
   border-radius: 50%;
-  color: #b9b0c2;
+  color: #a8b5ac;
   letter-spacing: 0;
 }
 .topic-card h3 {
@@ -248,8 +248,8 @@
   overflow-wrap: anywhere;
 }
 .topic-card.picked {
-  border-color: #a580ca;
-  background: #f7f2fd;
+  border-color: #4f9169;
+  background: #edf6ef;
 }
 .picked .topic-check {
   background: var(--accent);
@@ -257,13 +257,13 @@
   color: #fff;
 }
 .topic-card.used {
-  background: #dedde4;
-  color: #8b8592;
+  background: #dde3de;
+  color: #7d887f;
   opacity: 0.85;
 }
 .topic-card.used .topic-meta,
 .topic-card.used .topic-check {
-  color: #98919f;
+  color: #909a94;
 }
 .vote-bar {
   position: sticky;
@@ -275,7 +275,7 @@
   align-items: center;
   margin: 24px 0;
   padding: 20px 26px;
-  border: 1px solid #e7dff0;
+  border: 1px solid #e0ebe4;
   border-radius: 15px;
   background: #ffffffed;
   backdrop-filter: blur(14px);
@@ -284,7 +284,7 @@
   font-size: 0.95rem;
 }
 .vote-bar p {
-  color: #7c6d88;
+  color: #6f7c74;
   font-size: 0.75rem;
   margin-top: 3px;
 }
@@ -302,15 +302,15 @@
   margin-top: 7px;
 }
 .talk-panel {
-  border: 1px solid #e2d8ee;
+  border: 1px solid #d9e8de;
   border-radius: 24px;
-  background: radial-gradient(ellipse at top, #f2eafb, #fff 70%);
+  background: radial-gradient(ellipse at top, #e8f4ec, #fff 70%);
   text-align: center;
   padding: 48px 40px;
   margin-bottom: 45px;
 }
 .talk-stars {
-  color: #b092ce;
+  color: #6f9f83;
   font-size: 1.1rem;
   letter-spacing: 8px;
   display: block;
@@ -330,11 +330,11 @@
   margin: 0 auto;
   text-align: left;
   line-height: 2;
-  color: #776684;
+  color: #66756d;
 }
 .talk-rule {
   font-size: 0.8rem;
-  color: #a093ab;
+  color: #93a099;
   margin: 38px 0 25px;
 }
 .talk-panel > .small {
@@ -348,7 +348,7 @@
   justify-content: space-between;
   gap: 20px;
   font-size: 0.7rem;
-  color: #b5acbf;
+  color: #a7b3aa;
   border-top: 1px solid var(--line);
 }
 .footer > :first-child {
@@ -358,7 +358,7 @@
 }
 .empty {
   text-align: center;
-  border: 1px dashed #d8d0e1;
+  border: 1px dashed #d5e2d9;
   padding: 50px 20px;
   color: var(--muted);
   border-radius: 12px;
@@ -406,12 +406,12 @@
   font-weight: 600;
 }
 .login-card input {
-  border: 1px solid #ded7e7;
-  background: #fcfbfe;
+  border: 1px solid #d7e2da;
+  background: #fbfdfb;
   border-radius: 9px;
   padding: 12px 14px;
   width: 100%;
-  color: #403448;
+  color: #26332c;
 }
 .wide {
   width: 100%;
