@@ -8,9 +8,17 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+*.tsbuildinfo
 dist
 dist-ssr
 *.local
+.wrangler
+.data
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
 
 # エディターの設定と作業用ファイル
 .vscode/*

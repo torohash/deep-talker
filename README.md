@@ -1,161 +1,173 @@
 # Deep Talker
 
 ゲーム開発チームで、普段より少し深い話をするきっかけを作るWebアプリ。
-用意された題材から各自が話したいものを選び、抽選で今回の題材を決める。
+それぞれが話したい題材を3つ選び、全員の投票後に管理者が抽選を確定する。
 
-現在はReact + Vite + TypeScriptの初期セットアップまで。画面はViteの初期サンプルで、アプリの機能とCloudflare・Tursoへの接続はこれから実装する。
+認証、入退室、投票、抽選、トーク終了、使用済み表示まで実装済み。
+CloudflareとTursoの本番リソースは未作成。本番の設定手順は[リソースとデプロイ](docs/resources.md)を参照。
 
-## 開発環境
+## ローカルで起動する
 
-| 用途                             | 採用するもの                                                  |
-| -------------------------------- | ------------------------------------------------------------- |
-| 開発用ランタイムのバージョン管理 | mise                                                          |
-| 開発用ランタイム・パッケージ管理 | Bun                                                           |
-| フロントエンド                   | React + Vite + TypeScript                                     |
-| 画面の構成                       | SPA                                                           |
-| 公開先・API                      | Cloudflare Workers                                            |
-| WebSocketの接続管理・通知        | Cloudflare Durable Objects                                    |
-| アプリの状態の保存               | Turso                                                         |
-| リンター                         | Oxlint                                                        |
-| フォーマッター                   | Oxfmt                                                         |
-| テスト                           | Vitest 4。採用経緯は[開発ツールの検討](docs/tooling.md)を参照 |
+Linux・macOS、Windowsの場合はWSLを使用する。すべてのコマンドはプロジェクトのルートで実行する。
 
-Bunのバージョンは`mise.toml`、依存パッケージのバージョンは`bun.lock`で管理する。
-`bunfig.toml`の`run.bun`により、パッケージのスクリプトもBunで実行する。
-CloudflareにデプロイしたWorkerとDurable Objectは、Cloudflareのランタイム（workerd）で動作する。
-
-## セットアップ
-
-[mise](https://mise.jdx.dev/getting-started.html)をインストールしたうえで、プロジェクトのディレクトリで実行する。
+### 1. 開発ツールと設定
 
 ```sh
 mise trust
 mise install
 mise exec -- bun install
+cp .env.example .env
+```
+
+miseがBunとローカルDB用のlibsql-server（`sqld`）を用意する。
+`.env`にローカル実行用の設定を入れる。WorkerとDB操作コマンドがこのファイルを読み込む。
+実値を持つ`.env`はGitから除外し、設定項目の見本となる`.env.example`を共有する。本番のDB接続情報はCloudflare Secretsで管理する。
+
+以下の手順でローカルDBを使用する場合は、`.env`を次のように設定する。
+
+```dotenv
+TURSO_DATABASE_URL="http://127.0.0.1:8080"
+TURSO_AUTH_TOKEN=""
+COOKIE_SECURE="false"
+```
+
+開発用のTurso DBへ接続する場合は、そのDBのHTTPS URLと読み書き用トークンを設定する。この場合、次のローカルDB起動手順は不要。
+
+### 2. DBを起動する
+
+ターミナルを1つ開き、次を実行したままにする。
+
+```sh
+mise exec -- bun run dev:db
+```
+
+DBは`http://127.0.0.1:8080`で待ち受け、`.data/libsql`に保存する。外部のTursoアカウントは不要。
+
+### 3. スキーマとデータを入れる
+
+別のターミナルで実行する。
+
+```sh
+mise exec -- bun run db migrate
+```
+
+ローカルで試す場合は、デモ用の4アカウントと12件の題材を明示的に投入できる。
+
+```sh
+mise exec -- bun run db seed-demo
+```
+
+`admin`が管理者、`member-1`〜`member-3`が一般メンバーになる。パスワードは毎回ランダムに生成して、このコマンドの出力にだけ表示する。DBにはハッシュを保存する。
+デモ投入は空のDBに対して一度実行する。既存データの削除・上書きは行わない。
+
+独自のアカウント・題材を使う場合は、[DBへの直接登録](docs/resources.md#dbへの直接登録)の手順に従う。
+
+### 4. アプリを起動する
+
+```sh
 mise exec -- bun run dev
 ```
 
-miseをシェルに組み込んでいる場合は、`bun install`や`bun run dev`を直接実行できる。
+ターミナルに表示されたURLを開く。複数人の動作を試すときは、別のブラウザプロファイルやシークレットウィンドウを使う。
+同じプロファイルのタブはCookieを共有するため、同じユーザーとして扱う。
 
-### ビルドとプレビュー
+## 使い方
 
-```sh
-mise exec -- bun run build
-mise exec -- bun run preview
-```
+1. IDとパスワードでログインすると、部屋へ接続する。
+2. 接続中のユーザーが2人以上になると投票できる。
+3. 題材を3つ選び、「この3つに投票する」で確定する。確定後はその回の選択を変更できない。
+4. 参加者全員の投票が完了すると、管理者の「確定して抽選する」が有効になる。
+5. 未投票の人が途中参加すると、再び確定できなくなる。サーバー側でも確定時に参加状況を再確認する。
+6. 管理者が確定すると、全員に同じ題材のタイトルと詳細が表示される。
+7. 管理者がトークを終了すると、その題材を使用済みにする。「次の回を始める」で新しい投票へ進む。
 
-`build`ではTypeScriptの型チェックとViteのビルドを実行する。
+### 参加者の扱い
 
-### テスト
+- 現在は最大8人まで。同じユーザーの複数タブは1人として数える。
+- 参加者表示は人数に応じて折り返す。8人を超える利用を始める場合は、WSやDBの使用量も含めて設計を見直す。
+- 最後のWebSocket接続が閉じると退室扱いになる。通信断の検知はWebSocketの切断イベントに従う。
+- 退室した人の票は、その時点の抽選対象から外れる。同じ回に戻れば、確定済みの投票を復元する。
+- 抽選後の途中参加では、現在の題材を表示する。
+- 切断時は「部屋に接続する」から再接続できる。状態確認のためのポーリングは行わない。
 
-```sh
-mise exec -- bun run test
-```
+### 題材と抽選
 
-一度だけ実行する場合は`mise exec -- bun run test --run`を使う。
-`bun test`はBun自身のテストランナーを起動するため、Vitestには`bun run test`を使う。
-
-Vitestは既存の`vite.config.ts`を読み込む。テストは機能実装時に`.test.ts`や`.test.tsx`として追加する。
-現時点ではテストファイルは未追加で、`--run`でテストが見つからない場合はVitest標準の終了コード1になる。
-Workers向けのテスト設定は、Workersのコードを実装する段階で追加する。
-
-### リントと整形
-
-```sh
-mise exec -- bun run lint
-mise exec -- bun run fmt
-```
-
-整形結果を確認する場合は`mise exec -- bun run fmt --check`を実行する。
-ルールと整形スタイルは各ツールの標準設定を使う。
-
-## 採用する構成
-
-```text
-各メンバーのブラウザ
-    │ HTTPS / WebSocket
-    ▼
-Cloudflare Workers
-    ├─ SPAの配信・認証・API
-    └─ Durable Object：同じ部屋のWebSocket接続と通知を管理
-            │
-            ▼
-          Turso：題材・参加者・選択・抽選結果などを保存
-```
-
-- 同じチームのトークルームに1個のDurable Objectを対応させる。
-- メンバーやタブが増えた場合も、同じ部屋のDurable Objectへ接続する。
-- DO側では、現在の接続とそのユーザーを対応付ける。
-- 題材、参加者名簿、選択内容、抽選結果、使用済みフラグ、認証情報はTursoに保存する。
-- DOはSQLite方式で作成する。付属ストレージの形式を指定するもので、アプリの状態の保存先はTursoとする。
-- 状態の変更をWebSocketで通知する。再接続時にも保存済みの状態を取得する。
-
-DB更新を担当する箇所と、通知に状態全体を含めるか更新通知だけにするかは、機能実装時に決める。
-
-## 機能要件
-
-### メンバーと題材
-
-- メンバー数は可変。現在は4人で、今後もアカウントを追加できるようにする。
-- トークの題材はプロジェクトオーナーが集める。
-- 題材ごとにタイトル、詳細、話しやすさを表す星の段階を持たせる。
-- 選択画面ではタイトルをカードとして並べる。2〜3列を想定し、画面幅に応じた列数は今後決める。
-- 使用済みフラグを持たせ、使用済みのカードも一覧に残してグレーアウトする。
-
-### トークの流れ
-
-1. 配布されたIDとパスワードでログインする。
-2. 各自が題材を3件選ぶ。
-3. その回の参加者全員の選択が完了したら、自動で抽選する。
-4. 全員の画面に同じ題材を表示し、その題材について話す。
-5. 「トーク終了」操作で終了する。
-
-参加者はユーザーIDで扱い、接続数で人数を数えない。
-抽選結果はサーバー側で一度だけ確定し、全員が同じ結果を参照する。
+- 星は3段階。★は気軽な話、★★は考えを共有する話、★★★は深い話。
+- カードにはタイトルと星を表示する。画面幅に応じて3列・2列・1列に変わる。
+- 使用済みのカードも一覧に残し、グレーアウトして選択不可にする。
+- 抽選対象は、在室している参加者の「人数×3票」。同じ題材を複数人が選ぶほど当たりやすくなる。
+- 題材・メンバーはDBへ直接登録する。登録・編集の管理画面は今後作成する。
 
 ### 認証
 
-- チーム向けにIDとパスワードを配布する。
-- パスワードを平文で保存しない。
-- ログイン時にトークンを発行し、有効期限は28日間とする。
-- ページを新規に開いた際は、SPAのログイン・認証処理を経由する。
-- 既存のリフレッシュトークンが有効なら更新し、有効期限をその時点から28日後に設定する。
+- パスワードはソルト付きのArgon2idでハッシュ化する。
+- セッショントークンは暗号学的な乱数で生成し、DBにはSHA-256ハッシュだけを保存する。
+- トークン本体はHttpOnly・SameSite=StrictのCookieに保持する。本番ではSecureを付ける。
+- セッションは1人につき1つ。別の端末でログインすると前のトークンは使えなくなり、その端末の接続も切れる。
+- 有効期限は28日。ページを新規に開いた際、有効なセッションをその時点から28日後まで延長する。
+- 通常の状態通知・投票・接続待機では期限を延長しない。ログアウトでセッションを失効させる。
 
-### Hibernationによる稼働時間の管理
+## 構成
 
-**WebSocket Hibernation APIを使用し、接続を維持したまま、待機中のDOが休止できることを機能要件とする。**
+```text
+ブラウザ（React SPA）
+    │ HTTP / WebSocket
+    ▼
+Cloudflare Workers（画面配信・APIの入口）
+    │
+    ▼
+TalkRoom Durable Object（部屋ごとに1つ）
+    ├─ ログイン・セッション処理
+    ├─ 接続中のメンバーを接続から求める
+    ├─ 入退室・投票・抽選・終了の処理順を管理
+    ├─ 接続中のブラウザへ状態を配信
+    └─ HTTPでTursoへ読み書き
+```
 
-- WebSocket接続は`ctx.acceptWebSocket()`で受け入れる。
-- 状態確認のための定期取得や、DO内の常設タイマーで稼働し続ける構成にはしない。
-- 外向きのWebSocket・TCP接続を開いたままにするなど、休止を妨げる処理を避ける。
-- 接続とユーザーの対応はWebSocketのattachmentで保持し、休止後に取り出せるようにする。
-- 休止・再接続後も、Tursoに保存した選択と抽選結果をもとに処理を再開する。
-- デプロイ後に、待機中の接続維持とDOの稼働時間を確認する。
+- 開発・依存管理はmiseとBun。Workers・DOのコードはCloudflareのworkerdで動作する。
+- 本番のデータはTursoに保存する。ローカルでは同じlibSQL HTTP APIを持つDBを使用する。
+- 回・票・使用済みの題材はTursoへ書き、DOは接続中のメンバーと操作の順序だけを持つ。新しい回は行を1つ足し、終了した行は記録として残る。
+- 状態はWebSocketだけで配る。接続ごとに送った順で届くので、版の番号による上書きの判定は行わない。
+- 他の人には投票完了状況を配り、選んだ題材の一覧は本人にだけ返す。
 
-## 機能実装時に決める詳細
+### Hibernation
 
-- 星の段階数と意味、画面幅ごとのカードの列数。
-- その回の参加者の決め方、選択の確定方法、確定後の変更可否。
-- 抽選で同じ題材に複数票が入った場合の扱い。
-- 終了操作の管理者権限と、次の回の開始方法。
-- 使用済みフラグを立てるタイミングと、使用済みの題材の再選択可否。
-- 題材とアカウントの登録方法、トークンの具体的な構成。
+`ctx.acceptWebSocket()`で接続を受け入れ、ユーザーIDとセッション情報をattachmentへ保存する。
+待機中に動き続けるタイマーや、外向きの常時WebSocket接続は設けていない。
+休止後はCloudflareが保っている接続とattachmentを利用し、誰が部屋にいるかは接続から、回・票・題材はTursoから取得する。
 
-## 利用枠とデプロイ
+本番での休止とGB秒の実測は、デプロイ後の確認事項。手順は[リソースとデプロイ](docs/resources.md)に記載する。
 
-Cloudflareの利用枠はアカウント全体で共有する。利用プランとCI/CDの構成は今後決める。
+## 検証・ビルド
 
-- Workers FreeのDO稼働時間枠は13,000 GB秒／日。超過した種類の操作はエラーになり、超過を理由に自動で有料プランへ切り替わることはない。
-- Workers Paidは月額5米ドルからで、DO稼働時間400,000 GB秒／月などが含まれる。超過分は従量課金となる。
-- 同じアカウントにある他のDOの使用量も合算される。Tursoの料金・制限は別に確認する。
-- Tursoの認証トークンはCloudflareのSecretに置き、フロントエンドの`VITE_*`変数には入れない。
+```sh
+mise exec -- bun run test --run
+mise exec -- bun run lint
+mise exec -- bun run fmt --check
+mise exec -- bun run build
+```
 
-## 参考資料
+- Vitest 4と`@cloudflare/vitest-plugin`で、実際のWorkers実行環境を使用する。
+- テストは一時ディレクトリに専用のlibSQLサーバーを起動し、終了時に停止・削除する。開発用・本番用のDBには接続しない。
+- 入退室、途中参加、8人制限、複数タブ、投票の固定、二重抽選、終了・次回、使用済みの題材、セッションの置き換えと期限、題材の日時を検証する。
+- ブラウザでも複数ユーザーの一連の操作と、390px幅での表示を確認している。
 
-- [mise：Bun](https://mise.jdx.dev/lang/bun.html)
-- [Bun：Viteとの利用](https://bun.com/docs/guides/ecosystem/vite)
-- [Cloudflare：React SPAとAPI](https://developers.cloudflare.com/workers/vite-plugin/tutorial/)
-- [Cloudflare：WebSocket Hibernation](https://developers.cloudflare.com/durable-objects/best-practices/websockets/)
-- [Cloudflare：Durable Objectsのライフサイクル](https://developers.cloudflare.com/durable-objects/concepts/durable-object-lifecycle/)
-- [Cloudflare：Durable Objectsの料金](https://developers.cloudflare.com/durable-objects/platform/pricing/)
-- [Turso：TypeScript SDK](https://docs.turso.tech/sdk/ts/reference)
+ビルド成果物は`dist/client`と`dist/deep_talker`へ出力される。`bun run preview`でプレビューできる。
+`bun test`はBun自身のテストランナーになるため、Vitestには`bun run test`を使う。
+
+## ファイル
+
+| 場所                    | 内容                                               |
+| ----------------------- | -------------------------------------------------- |
+| `src/`                  | ログイン、参加者一覧、題材選択、トーク画面         |
+| `shared/model.ts`       | 人数・票数などの共通ルール、状態の型と表示用の計算 |
+| `worker/`               | Worker、DO、認証、Tursoへの読み書き                |
+| `db/schema.sql`         | ユーザー・セッション・題材・回・票のテーブル定義   |
+| `db/topics.example.sql` | 任意で投入するサンプル題材                         |
+| `scripts/db.ts`         | SQL適用、パスワードハッシュ生成、デモ投入          |
+| `tests/`                | WorkersとローカルDBを使うテスト                    |
+| `wrangler.jsonc`        | Cloudflareのバインディング・マイグレーション設定   |
+
+- [本番リソースとデプロイ手順](docs/resources.md)
+- [セッションとデータの配置方針](docs/data-model.md)
+- [開発ツールの選定メモ](docs/tooling.md)

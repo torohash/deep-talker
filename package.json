@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:db": "mkdir -p .data && sqld --db-path .data/libsql --http-listen-addr 127.0.0.1:8080",
+    "db": "bun --env-file=.env scripts/db.ts",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "oxlint",
@@ -12,10 +14,15 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@libsql/client": "^0.18.0",
+    "@noble/hashes": "^2.4.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.54.9",
+    "@cloudflare/vitest-plugin": "^1.1.9",
+    "@cloudflare/workers-types": "^5.20260914.1",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
@@ -24,6 +31,7 @@
     "oxlint": "^1.83.0",
     "typescript": "~6.0.2",
     "vite": "^8.3.0",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.0",
+    "wrangler": "^4.131.2"
   }
 }

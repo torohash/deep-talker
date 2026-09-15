@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "deep-talker",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-09-15",
+  "assets": {
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"],
+  },
+  "vars": { "COOKIE_SECURE": "true" },
+  "durable_objects": {
+    "bindings": [{ "name": "ROOM", "class_name": "TalkRoom" }],
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["TalkRoom"] }],
+}

@@ -6,7 +6,8 @@
     "types": ["node"],
     "skipLibCheck": true,
 
-    "module": "nodenext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
@@ -17,5 +18,11 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "vite.config.ts",
+    "vitest.config.ts",
+    "scripts",
+    "tests/setup.ts",
+    "tests/provided.d.ts"
+  ]
 }
